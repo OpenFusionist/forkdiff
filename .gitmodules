@@ -1,0 +1,3 @@
+[submodule "forkdiff"]
+	path = forkdiff
+	url = https://github.com/protolambda/forkdiff.git

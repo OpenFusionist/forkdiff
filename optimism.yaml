@@ -1,0 +1,47 @@
+title: "OpenFusionist's optimism fork diff"
+logo: ""
+footer: |  
+  Fork-diff overview of [optimism](https://github.com/OpenFusionist/optimism/), a fork of [optimism](https://github.com/ethereum-optimism/optimism).
+base:
+  name: ethereum-optimism/optimism
+  url: https://github.com/ethereum-optimism/optimism
+  ref: refs/heads/2372c9
+fork:
+  name: OpenFusionist/optimism
+  url: https://github.com/OpenFusionist/optimism/
+  ref: refs/heads/2372c9-fsn
+def:
+    title: "OpenFusionist's optimism fork diff"
+    description: | 
+      These are some **really** important `code` modifications in the fork.
+      The original can be found at [`github.com/ethereum-optimism/optimism`](https://github.com/ethereum-optimism/optimism).
+      And the fork at [`OpenFusionist/optimism/`](https://github.com/OpenFusionist/optimism/).
+    globs:
+    sub:
+      - title: "Non-EIP-1559 Support"
+        description: "Support for non-eip-1559 L1 and compatibility with BAS chain."
+        globs:
+          - "op-chain-ops/genesis/config.go" 
+          - "op-node/rollup/derive/attributes.go"
+          - "op-service/bas/compat.go"
+          - "op-service/txmgr/txmgr.go"
+      - title: "Resource Metering Contract"
+        description: "ResourceMetering.sol is compatible with BAS chain."
+        globs:
+          - "packages/contracts-bedrock/src/L1/ResourceMetering.sol"
+      - title: "L1 Block Labeling"
+        description: "Added support for L1 blocks without 'safe' and 'finalized' labels."
+        globs:
+          - "op-service/sources/eth_client.go"
+      - title: "Gas Pricing Fixes"
+        description: "Establish default values for gas tip cap when it's nil."
+        globs:
+          - "op-service/txmgr/metrics/tx_metrics.go"
+      - title: "Dependencies Update"
+        description: "Updated and managed project dependencies."
+        globs:
+          - "go.mod"
+ignore:
+  - "*.sum"
+
+ 

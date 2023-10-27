@@ -1,0 +1,1263 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
+    <title>OpenFusionist's optimism fork diff</title>
+
+    <link rel="icon" type="image/x-icon" href="">
+
+    <style>
+        .line-stat {
+            width: 14rem;
+            float: right;
+        }
+        .line-stat div {
+            width: 50%;
+        }
+    </style>
+
+    
+<style>
+    .term-container {
+        background: #171717;
+        border-radius: 5px;
+        color: white;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        font-family: "SFMono-Regular", Monaco, Menlo, Consolas, "Liberation Mono", Courier, monospace;
+        font-size: 12px;
+        line-height: 20px;
+        padding: 14px 18px;
+        white-space: pre-wrap;
+    }
+
+    .term-container img { max-width: 100%; }
+
+    .term a { color: inherit; text-decoration: underline; text-decoration-style: dashed; }
+    .term a:hover { color: #2882F9 }
+
+    @keyframes blink-animation {
+        to {
+            visibility: hidden;
+        }
+    }
+
+    .term-fg1 { } /* don't bold beccause it looks weird */
+    .term-fg2 { color: #838887; } /* faint (decreased intensity) - same as gray really */
+    .term-fg3 { font-style: italic; } /* italic */
+    .term-fg4 { text-decoration: underline; } /* underline */
+    .term-fg5 { animation: blink-animation 1s steps(3, start) infinite; } /* blink */
+    .term-fg9 { text-decoration: line-through; } /* crossed-out */
+
+    .term-fg30 { color: #666666; } /* black (but we can't use black, so a diff color) */
+    .term-fg31 { color: #ff7070; } /* red */
+    .term-fg32 { color: #b0f986; } /* green */
+    .term-fg33 { color: #c6c502; } /* yellow */
+    .term-fg34 { color: #8db7e0; } /* blue */
+    .term-fg35 { color: #f271fb; } /* magenta */
+    .term-fg36 { color: #6bf7ff; } /* cyan */
+
+    /* high intense colors */
+    .term-fgi1 { color: #5ef765; }
+    .term-fgi90 { color: #838887; } /* grey */
+    .term-fgi91 { color: #ff3333; } /* red */
+    .term-fgi92 { color: #00FF00; } /* green */
+    .term-fgi93 { color: #fffc67; } /* yellow */
+    .term-fgi94 { color: #6871ff; } /* blue */
+    .term-fgi95 { color: #ff76ff; } /* magenta */
+    .term-fgi96 { color: #60fcff; } /* cyan */
+
+    /* background colors */
+    .term-bg40 { background: #676767; } /* grey */
+    .term-bg41 { background: #ff4343; } /* red */
+    .term-bg42 { background: #99ff5f; } /* green */
+
+    /* custom foreground/background combos for readability */
+    .term-fg31.term-bg40 { color: #F8A39F; }
+
+    /* xterm colors */
+    .term-fgx16 { color: #000000; }
+    .term-fgx17 { color: #00005f; }
+    .term-fgx18 { color: #000087; }
+    .term-fgx19 { color: #0000af; }
+    .term-fgx20 { color: #0000d7; }
+    .term-fgx21 { color: #0000ff; }
+    .term-fgx22 { color: #005f00; }
+    .term-fgx23 { color: #005f5f; }
+    .term-fgx24 { color: #005f87; }
+    .term-fgx25 { color: #005faf; }
+    .term-fgx26 { color: #005fd7; }
+    .term-fgx27 { color: #005fff; }
+    .term-fgx28 { color: #008700; }
+    .term-fgx29 { color: #00875f; }
+    .term-fgx30 { color: #008787; }
+    .term-fgx31 { color: #0087af; }
+    .term-fgx32 { color: #0087d7; }
+    .term-fgx33 { color: #0087ff; }
+    .term-fgx34 { color: #00af00; }
+    .term-fgx35 { color: #00af5f; }
+    .term-fgx36 { color: #00af87; }
+    .term-fgx37 { color: #00afaf; }
+    .term-fgx38 { color: #00afd7; }
+    .term-fgx39 { color: #00afff; }
+    .term-fgx40 { color: #00d700; }
+    .term-fgx41 { color: #00d75f; }
+    .term-fgx42 { color: #00d787; }
+    .term-fgx43 { color: #00d7af; }
+    .term-fgx44 { color: #00d7d7; }
+    .term-fgx45 { color: #00d7ff; }
+    .term-fgx46 { color: #00ff00; }
+    .term-fgx47 { color: #00ff5f; }
+    .term-fgx48 { color: #00ff87; }
+    .term-fgx49 { color: #00ffaf; }
+    .term-fgx50 { color: #00ffd7; }
+    .term-fgx51 { color: #00ffff; }
+    .term-fgx52 { color: #5f0000; }
+    .term-fgx53 { color: #5f005f; }
+    .term-fgx54 { color: #5f0087; }
+    .term-fgx55 { color: #5f00af; }
+    .term-fgx56 { color: #5f00d7; }
+    .term-fgx57 { color: #5f00ff; }
+    .term-fgx58 { color: #5f5f00; }
+    .term-fgx59 { color: #5f5f5f; }
+    .term-fgx60 { color: #5f5f87; }
+    .term-fgx61 { color: #5f5faf; }
+    .term-fgx62 { color: #5f5fd7; }
+    .term-fgx63 { color: #5f5fff; }
+    .term-fgx64 { color: #5f8700; }
+    .term-fgx65 { color: #5f875f; }
+    .term-fgx66 { color: #5f8787; }
+    .term-fgx67 { color: #5f87af; }
+    .term-fgx68 { color: #5f87d7; }
+    .term-fgx69 { color: #5f87ff; }
+    .term-fgx70 { color: #5faf00; }
+    .term-fgx71 { color: #5faf5f; }
+    .term-fgx72 { color: #5faf87; }
+    .term-fgx73 { color: #5fafaf; }
+    .term-fgx74 { color: #5fafd7; }
+    .term-fgx75 { color: #5fafff; }
+    .term-fgx76 { color: #5fd700; }
+    .term-fgx77 { color: #5fd75f; }
+    .term-fgx78 { color: #5fd787; }
+    .term-fgx79 { color: #5fd7af; }
+    .term-fgx80 { color: #5fd7d7; }
+    .term-fgx81 { color: #5fd7ff; }
+    .term-fgx82 { color: #5fff00; }
+    .term-fgx83 { color: #5fff5f; }
+    .term-fgx84 { color: #5fff87; }
+    .term-fgx85 { color: #5fffaf; }
+    .term-fgx86 { color: #5fffd7; }
+    .term-fgx87 { color: #5fffff; }
+    .term-fgx88 { color: #870000; }
+    .term-fgx89 { color: #87005f; }
+    .term-fgx90 { color: #870087; }
+    .term-fgx91 { color: #8700af; }
+    .term-fgx92 { color: #8700d7; }
+    .term-fgx93 { color: #8700ff; }
+    .term-fgx94 { color: #875f00; }
+    .term-fgx95 { color: #875f5f; }
+    .term-fgx96 { color: #875f87; }
+    .term-fgx97 { color: #875faf; }
+    .term-fgx98 { color: #875fd7; }
+    .term-fgx99 { color: #875fff; }
+    .term-fgx100 { color: #878700; }
+    .term-fgx101 { color: #87875f; }
+    .term-fgx102 { color: #878787; }
+    .term-fgx103 { color: #8787af; }
+    .term-fgx104 { color: #8787d7; }
+    .term-fgx105 { color: #8787ff; }
+    .term-fgx106 { color: #87af00; }
+    .term-fgx107 { color: #87af5f; }
+    .term-fgx108 { color: #87af87; }
+    .term-fgx109 { color: #87afaf; }
+    .term-fgx110 { color: #87afd7; }
+    .term-fgx111 { color: #87afff; }
+    .term-fgx112 { color: #87d700; }
+    .term-fgx113 { color: #87d75f; }
+    .term-fgx114 { color: #87d787; }
+    .term-fgx115 { color: #87d7af; }
+    .term-fgx116 { color: #87d7d7; }
+    .term-fgx117 { color: #87d7ff; }
+    .term-fgx118 { color: #87ff00; }
+    .term-fgx119 { color: #87ff5f; }
+    .term-fgx120 { color: #87ff87; }
+    .term-fgx121 { color: #87ffaf; }
+    .term-fgx122 { color: #87ffd7; }
+    .term-fgx123 { color: #87ffff; }
+    .term-fgx124 { color: #af0000; }
+    .term-fgx125 { color: #af005f; }
+    .term-fgx126 { color: #af0087; }
+    .term-fgx127 { color: #af00af; }
+    .term-fgx128 { color: #af00d7; }
+    .term-fgx129 { color: #af00ff; }
+    .term-fgx130 { color: #af5f00; }
+    .term-fgx131 { color: #af5f5f; }
+    .term-fgx132 { color: #af5f87; }
+    .term-fgx133 { color: #af5faf; }
+    .term-fgx134 { color: #af5fd7; }
+    .term-fgx135 { color: #af5fff; }
+    .term-fgx136 { color: #af8700; }
+    .term-fgx137 { color: #af875f; }
+    .term-fgx138 { color: #af8787; }
+    .term-fgx139 { color: #af87af; }
+    .term-fgx140 { color: #af87d7; }
+    .term-fgx141 { color: #af87ff; }
+    .term-fgx142 { color: #afaf00; }
+    .term-fgx143 { color: #afaf5f; }
+    .term-fgx144 { color: #afaf87; }
+    .term-fgx145 { color: #afafaf; }
+    .term-fgx146 { color: #afafd7; }
+    .term-fgx147 { color: #afafff; }
+    .term-fgx148 { color: #afd700; }
+    .term-fgx149 { color: #afd75f; }
+    .term-fgx150 { color: #afd787; }
+    .term-fgx151 { color: #afd7af; }
+    .term-fgx152 { color: #afd7d7; }
+    .term-fgx153 { color: #afd7ff; }
+    .term-fgx154 { color: #afff00; }
+    .term-fgx155 { color: #afff5f; }
+    .term-fgx156 { color: #afff87; }
+    .term-fgx157 { color: #afffaf; }
+    .term-fgx158 { color: #afffd7; }
+    .term-fgx159 { color: #afffff; }
+    .term-fgx160 { color: #d70000; }
+    .term-fgx161 { color: #d7005f; }
+    .term-fgx162 { color: #d70087; }
+    .term-fgx163 { color: #d700af; }
+    .term-fgx164 { color: #d700d7; }
+    .term-fgx165 { color: #d700ff; }
+    .term-fgx166 { color: #d75f00; }
+    .term-fgx167 { color: #d75f5f; }
+    .term-fgx168 { color: #d75f87; }
+    .term-fgx169 { color: #d75faf; }
+    .term-fgx170 { color: #d75fd7; }
+    .term-fgx171 { color: #d75fff; }
+    .term-fgx172 { color: #d78700; }
+    .term-fgx173 { color: #d7875f; }
+    .term-fgx174 { color: #d78787; }
+    .term-fgx175 { color: #d787af; }
+    .term-fgx176 { color: #d787d7; }
+    .term-fgx177 { color: #d787ff; }
+    .term-fgx178 { color: #d7af00; }
+    .term-fgx179 { color: #d7af5f; }
+    .term-fgx180 { color: #d7af87; }
+    .term-fgx181 { color: #d7afaf; }
+    .term-fgx182 { color: #d7afd7; }
+    .term-fgx183 { color: #d7afff; }
+    .term-fgx184 { color: #d7d700; }
+    .term-fgx185 { color: #d7d75f; }
+    .term-fgx186 { color: #d7d787; }
+    .term-fgx187 { color: #d7d7af; }
+    .term-fgx188 { color: #d7d7d7; }
+    .term-fgx189 { color: #d7d7ff; }
+    .term-fgx190 { color: #d7ff00; }
+    .term-fgx191 { color: #d7ff5f; }
+    .term-fgx192 { color: #d7ff87; }
+    .term-fgx193 { color: #d7ffaf; }
+    .term-fgx194 { color: #d7ffd7; }
+    .term-fgx195 { color: #d7ffff; }
+    .term-fgx196 { color: #ff0000; }
+    .term-fgx197 { color: #ff005f; }
+    .term-fgx198 { color: #ff0087; }
+    .term-fgx199 { color: #ff00af; }
+    .term-fgx200 { color: #ff00d7; }
+    .term-fgx201 { color: #ff00ff; }
+    .term-fgx202 { color: #ff5f00; }
+    .term-fgx203 { color: #ff5f5f; }
+    .term-fgx204 { color: #ff5f87; }
+    .term-fgx205 { color: #ff5faf; }
+    .term-fgx206 { color: #ff5fd7; }
+    .term-fgx207 { color: #ff5fff; }
+    .term-fgx208 { color: #ff8700; }
+    .term-fgx209 { color: #ff875f; }
+    .term-fgx210 { color: #ff8787; }
+    .term-fgx211 { color: #ff87af; }
+    .term-fgx212 { color: #ff87d7; }
+    .term-fgx213 { color: #ff87ff; }
+    .term-fgx214 { color: #ffaf00; }
+    .term-fgx215 { color: #ffaf5f; }
+    .term-fgx216 { color: #ffaf87; }
+    .term-fgx217 { color: #ffafaf; }
+    .term-fgx218 { color: #ffafd7; }
+    .term-fgx219 { color: #ffafff; }
+    .term-fgx220 { color: #ffd700; }
+    .term-fgx221 { color: #ffd75f; }
+    .term-fgx222 { color: #ffd787; }
+    .term-fgx223 { color: #ffd7af; }
+    .term-fgx224 { color: #ffd7d7; }
+    .term-fgx225 { color: #ffd7ff; }
+    .term-fgx226 { color: #ffff00; }
+    .term-fgx227 { color: #ffff5f; }
+    .term-fgx228 { color: #ffff87; }
+    .term-fgx229 { color: #ffffaf; }
+    .term-fgx230 { color: #ffffd7; }
+    .term-fgx231 { color: #ffffff; }
+    .term-fgx232 { color: #080808; }
+    .term-fgx233 { color: #121212; }
+    .term-fgx234 { color: #1c1c1c; }
+    .term-fgx235 { color: #262626; }
+    .term-fgx236 { color: #303030; }
+    .term-fgx237 { color: #3a3a3a; }
+    .term-fgx238 { color: #444444; }
+    .term-fgx239 { color: #4e4e4e; }
+    .term-fgx240 { color: #585858; }
+    .term-fgx241 { color: #626262; }
+    .term-fgx242 { color: #6c6c6c; }
+    .term-fgx243 { color: #767676; }
+    .term-fgx244 { color: #808080; }
+    .term-fgx245 { color: #8a8a8a; }
+    .term-fgx246 { color: #949494; }
+    .term-fgx247 { color: #9e9e9e; }
+    .term-fgx248 { color: #a8a8a8; }
+    .term-fgx249 { color: #b2b2b2; }
+    .term-fgx250 { color: #bcbcbc; }
+    .term-fgx251 { color: #c6c6c6; }
+    .term-fgx252 { color: #d0d0d0; }
+    .term-fgx253 { color: #dadada; }
+    .term-fgx254 { color: #e4e4e4; }
+    .term-fgx255 { color: #eeeeee; }
+</style>
+
+</head>
+<body>
+    <div class="col-xl-10 col-xxl-8 mx-auto px-3 py-1 py-md-3">
+        <main class="container-fluid">
+            <div class="row">
+                <div>
+                    <div class="float-end">
+                        <div class="form-check form-switch">
+                            <i class="bi bi-brightness-low" id="dark-mode-icon"></i>
+                            <input class="form-check-input" type="checkbox" role="switch" id="dark-mode-toggle" data-bs-toggle="tooltip"
+                                   data-bs-placement="bottom" data-bs-title="Toggle Dark Mode"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="ps-1 py-2 my-1"><div class="row border-bottom border-1"role="button" aria-expanded="true" aria-controls="id-f5b3e004c9385b3a10f5ddba">
+        
+            <div class="col-12 col-sm-9 text-start"><h1>OpenFusionist's optimism fork diff</h1></div>
+        
+        <div class="col-12 col-sm-3 ms-auto mt-2">
+            <div class="row line-stat">
+                <div class="text-end"><span class="text-success">+140</span></div>
+                <div class="text-start"><span class="text-danger">-14</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row forkdef-content collapse show border-1 ps-3 my-3" id="id-f5b3e004c9385b3a10f5ddba">
+        <div><p>These are some <strong>really</strong> important <code>code</code> modifications in the fork.
+The original can be found at <a href="https://github.com/ethereum-optimism/optimism"><code>github.com/ethereum-optimism/optimism</code></a>.
+And the fork at <a href="https://github.com/OpenFusionist/optimism/"><code>OpenFusionist/optimism/</code></a>.</p>
+</div>
+        <div>
+            
+        </div>
+        <div>
+            
+                <div class="ps-1 py-2 my-1"><div class="row border-bottom border-1"data-bs-toggle="collapse" data-bs-target="#id-c860189d105cb084f0a9b6a2"role="button" aria-expanded="false" aria-controls="id-c860189d105cb084f0a9b6a2">
+        
+            <div class="col-12 col-sm-9 text-start"><h2>Non-EIP-1559 Support</h2></div>
+        
+        <div class="col-12 col-sm-3 ms-auto mt-2">
+            <div class="row line-stat">
+                <div class="text-end"><span class="text-success">+94</span></div>
+                <div class="text-start"><span class="text-danger">-12</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row forkdef-content collapse  border-1 ps-3 my-3" id="id-c860189d105cb084f0a9b6a2">
+        <div><p>Support for non-eip-1559 L1 and compatibility with BAS chain.</p>
+</div>
+        <div>
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-27ed93ea37dbe6fe443156e3" role="button"
+                   aria-expanded="false" aria-controls="id-27ed93ea37dbe6fe443156e3">
+                    <code>op-chain-ops/genesis/config.go</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/ethereum-optimism/optimism/blob/2372c982d008638427014ccb400e8a0ca02716fc/op-chain-ops/genesis/config.go" target="_blank">ethereum-optimism/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/op-chain-ops/genesis/config.go" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+2</span></div>
+                        <div class="text-start"><span class="text-danger">-4</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-27ed93ea37dbe6fe443156e3"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;op-chain-ops&#47;genesis&#47;config.go OpenFusionist&#47;optimism&#47;op-chain-ops&#47;genesis&#47;config.go</span>
+<span class="term-fg1">index b706f59dd7cdefd5abf91b0363a64ec93953b681..dd7e13c26aaee6a3c9c76d4ec8c3facd4710aee6 100644</span>
+<span class="term-fg1">--- ethereum-optimism&#47;optimism&#47;op-chain-ops&#47;genesis&#47;config.go</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;op-chain-ops&#47;genesis&#47;config.go</span>
+<span class="term-fg36">@@ -5,6 +5,7 @@</span> 	&quot;bytes&quot;
+ 	&quot;encoding&#47;json&quot;
+ 	&quot;errors&quot;
+ 	&quot;fmt&quot;
+<span class="term-fg32">+	&quot;github.com&#47;ethereum-optimism&#47;optimism&#47;op-service&#47;bas&quot;</span>
+ 	&quot;math&#47;big&quot;
+ 	&quot;os&quot;
+ 	&quot;path&#47;filepath&quot;
+<span class="term-fg36">@@ -720,9 +721,6 @@</span>
+ 	if block.Number() == nil {
+ 		return storage, errors.New(&quot;block number not set&quot;)
+ 	}
+<span class="term-fg31">-	if block.BaseFee() == nil {</span>
+<span class="term-fg31">-		return storage, errors.New(&quot;block base fee not set&quot;)</span>
+<span class="term-fg31">-	}</span>
+&nbsp;
+ 	storage[&quot;L2ToL1MessagePasser&quot;] = state.StorageValues{
+ 		&quot;msgNonce&quot;: 0,
+<span class="term-fg36">@@ -741,7 +739,7 @@</span> 	}
+ 	storage[&quot;L1Block&quot;] = state.StorageValues{
+ 		&quot;number&quot;:         block.Number(),
+ 		&quot;timestamp&quot;:      block.Time(),
+<span class="term-fg31">-		&quot;basefee&quot;:        block.BaseFee(),</span>
+<span class="term-fg32">+		&quot;basefee&quot;:        bas.BaseFeeByTransactions(block.Transactions()),</span>
+ 		&quot;hash&quot;:           block.Hash(),
+ 		&quot;sequenceNumber&quot;: 0,
+ 		&quot;batcherHash&quot;:    eth.AddressAsLeftPaddedHash(config.BatchSenderAddress),</div>
+    </div>
+
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-9ddc56ba4990d349621b6bbf" role="button"
+                   aria-expanded="false" aria-controls="id-9ddc56ba4990d349621b6bbf">
+                    <code>op-node/rollup/derive/attributes.go</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/ethereum-optimism/optimism/blob/2372c982d008638427014ccb400e8a0ca02716fc/op-node/rollup/derive/attributes.go" target="_blank">ethereum-optimism/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/op-node/rollup/derive/attributes.go" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+12</span></div>
+                        <div class="text-start"><span class="text-danger">-1</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-9ddc56ba4990d349621b6bbf"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;op-node&#47;rollup&#47;derive&#47;attributes.go OpenFusionist&#47;optimism&#47;op-node&#47;rollup&#47;derive&#47;attributes.go</span>
+<span class="term-fg1">index b65f680952f3fd332ebfbf787de32ff16b13a179..8a6ec07da5c3b66ca4568192fdabfc41c65d7960 100644</span>
+<span class="term-fg1">--- ethereum-optimism&#47;optimism&#47;op-node&#47;rollup&#47;derive&#47;attributes.go</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;op-node&#47;rollup&#47;derive&#47;attributes.go</span>
+<span class="term-fg36">@@ -3,7 +3,7 @@</span>
+ import (
+ 	&quot;context&quot;
+ 	&quot;fmt&quot;
+<span class="term-fg31">-</span>
+<span class="term-fg32">+	&quot;github.com&#47;ethereum-optimism&#47;optimism&#47;op-service&#47;bas&quot;</span>
+ 	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;common&quot;
+ 	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;common&#47;hexutil&quot;
+ 	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;core&#47;types&quot;
+<span class="term-fg36">@@ -16,6 +16,7 @@</span>
+ &#47;&#47; L1ReceiptsFetcher fetches L1 header info and receipts for the payload attributes derivation (the info tx and deposits)
+ type L1ReceiptsFetcher interface {
+ 	InfoByHash(ctx context.Context, hash common.Hash) (eth.BlockInfo, error)
+<span class="term-fg32">+	InfoAndTxsByHash(ctx context.Context, hash common.Hash) (eth.BlockInfo, types.Transactions, error)</span>
+ 	FetchReceipts(ctx context.Context, blockHash common.Hash) (eth.BlockInfo, types.Receipts, error)
+ }
+&nbsp;
+<span class="term-fg36">@@ -53,6 +54,14 @@</span> 	if err != nil {
+ 		return nil, NewTemporaryError(fmt.Errorf(&quot;failed to retrieve L2 parent block: %w&quot;, err))
+ 	}
+&nbsp;
+<span class="term-fg32">+	&#47;&#47; Calculate bsc block base fee</span>
+<span class="term-fg32">+	_, transactions, err := ba.l1.InfoAndTxsByHash(ctx, epoch.Hash)</span>
+<span class="term-fg32">+	if err != nil {</span>
+<span class="term-fg32">+		return nil, NewTemporaryError(fmt.Errorf(&quot;failed to fetch L1 block info and txs: %w&quot;, err))</span>
+<span class="term-fg32">+	}</span>
+<span class="term-fg32">+	l1BaseFee := bas.BaseFeeByTransactions(transactions)</span>
+<span class="term-fg32">+	fmt.Println(&quot;PreparePayloadAttributes l1BaseFee: &quot;, l1BaseFee)</span>
+<span class="term-fg32">+</span>
+ 	&#47;&#47; If the L1 origin changed this block, then we are in the first block of the epoch. In this
+ 	&#47;&#47; case we need to fetch all transaction receipts from the L1 origin block so we can scan for
+ 	&#47;&#47; user deposits.
+<span class="term-fg36">@@ -92,6 +101,8 @@</span> 		l1Info = info
+ 		depositTxs = nil
+ 		seqNumber = l2Parent.SequenceNumber + 1
+ 	}
+<span class="term-fg32">+</span>
+<span class="term-fg32">+	l1Info = bas.NewBlockInfoBSCWrapper(l1Info, l1BaseFee)</span>
+&nbsp;
+ 	&#47;&#47; Sanity check the L1 origin was correctly selected to maintain the time invariant between L1 and L2
+ 	nextL2Time := l2Parent.Time + ba.cfg.BlockTime</div>
+    </div>
+
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-51c87d8e65c1a3e63f8e7404" role="button"
+                   aria-expanded="false" aria-controls="id-51c87d8e65c1a3e63f8e7404">
+                    <code>op-service/bas/compat.go</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <span class="text-muted">(new)</span>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/op-service/bas/compat.go" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+69</span></div>
+                        <div class="text-start"><span class="text-danger">-0</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-51c87d8e65c1a3e63f8e7404"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;op-service&#47;bas&#47;compat.go OpenFusionist&#47;optimism&#47;op-service&#47;bas&#47;compat.go</span>
+<span class="term-fg1">new file mode 100644</span>
+<span class="term-fg1">index 0000000000000000000000000000000000000000..3c9208af5fca804aadbfd6280c6753405ada6425</span>
+<span class="term-fg1">--- &#47;dev&#47;null</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;op-service&#47;bas&#47;compat.go</span>
+<span class="term-fg36">@@ -0,0 +1,69 @@</span>
+<span class="term-fg32">+package bas</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+import (</span>
+<span class="term-fg32">+	&quot;math&#47;big&quot;</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+	&quot;github.com&#47;ethereum&#47;go-ethereum&quot;</span>
+<span class="term-fg32">+	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;common&quot;</span>
+<span class="term-fg32">+	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;core&#47;types&quot;</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+	&quot;github.com&#47;ethereum-optimism&#47;optimism&#47;op-service&#47;eth&quot;</span>
+<span class="term-fg32">+)</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+var DefaultBaseFeeByTransactions = big.NewInt(1000000000)</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+type BlockInfoBSCWrapper struct {</span>
+<span class="term-fg32">+	eth.BlockInfo</span>
+<span class="term-fg32">+	baseFee *big.Int</span>
+<span class="term-fg32">+}</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+var _ eth.BlockInfo = (*BlockInfoBSCWrapper)(nil)</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+func NewBlockInfoBSCWrapper(info eth.BlockInfo, baseFee *big.Int) *BlockInfoBSCWrapper {</span>
+<span class="term-fg32">+	return &amp;BlockInfoBSCWrapper{</span>
+<span class="term-fg32">+		BlockInfo: info,</span>
+<span class="term-fg32">+		baseFee:   baseFee,</span>
+<span class="term-fg32">+	}</span>
+<span class="term-fg32">+}</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+func (b *BlockInfoBSCWrapper) BaseFee() *big.Int {</span>
+<span class="term-fg32">+	return b.baseFee</span>
+<span class="term-fg32">+}</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+&#47;&#47; BaseFeeByTransactions calculates the average gas price of the non-zero-gas-price transactions in the block.</span>
+<span class="term-fg32">+&#47;&#47; If there is no non-zero-gas-price transaction in the block, it returns DefaultBaseFeeByTransactions.</span>
+<span class="term-fg32">+func BaseFeeByTransactions(transactions types.Transactions) *big.Int {</span>
+<span class="term-fg32">+	nonZeroTxsCnt := big.NewInt(0)</span>
+<span class="term-fg32">+	nonZeroTxsSum := big.NewInt(0)</span>
+<span class="term-fg32">+	for _, tx := range transactions {</span>
+<span class="term-fg32">+		if tx.GasPrice().Cmp(common.Big0) &gt; 0 {</span>
+<span class="term-fg32">+			nonZeroTxsCnt.Add(nonZeroTxsCnt, big.NewInt(1))</span>
+<span class="term-fg32">+			nonZeroTxsSum.Add(nonZeroTxsSum, tx.GasPrice())</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+	}</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+	if nonZeroTxsCnt.Cmp(big.NewInt(0)) == 0 {</span>
+<span class="term-fg32">+		return DefaultBaseFeeByTransactions</span>
+<span class="term-fg32">+	}</span>
+<span class="term-fg32">+	return nonZeroTxsSum.Div(nonZeroTxsSum, nonZeroTxsCnt)</span>
+<span class="term-fg32">+}</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+func ToLegacyTx(dynTx *types.DynamicFeeTx) types.TxData {</span>
+<span class="term-fg32">+	return &amp;types.LegacyTx{</span>
+<span class="term-fg32">+		Nonce:    dynTx.Nonce,</span>
+<span class="term-fg32">+		GasPrice: dynTx.GasFeeCap,</span>
+<span class="term-fg32">+		Gas:      dynTx.Gas,</span>
+<span class="term-fg32">+		To:       dynTx.To,</span>
+<span class="term-fg32">+		Value:    dynTx.Value,</span>
+<span class="term-fg32">+		Data:     dynTx.Data,</span>
+<span class="term-fg32">+	}</span>
+<span class="term-fg32">+}</span>
+<span class="term-fg32">+</span>
+<span class="term-fg32">+func ToLegacyCallMsg(callMsg ethereum.CallMsg) ethereum.CallMsg {</span>
+<span class="term-fg32">+	return ethereum.CallMsg{</span>
+<span class="term-fg32">+		From:     callMsg.From,</span>
+<span class="term-fg32">+		To:       callMsg.To,</span>
+<span class="term-fg32">+		GasPrice: callMsg.GasFeeCap,</span>
+<span class="term-fg32">+		Data:     callMsg.Data,</span>
+<span class="term-fg32">+	}</span>
+<span class="term-fg32">+}</span></div>
+    </div>
+
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-70d8753a3cf0e73c3024ee61" role="button"
+                   aria-expanded="false" aria-controls="id-70d8753a3cf0e73c3024ee61">
+                    <code>op-service/txmgr/txmgr.go</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/ethereum-optimism/optimism/blob/2372c982d008638427014ccb400e8a0ca02716fc/op-service/txmgr/txmgr.go" target="_blank">ethereum-optimism/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/op-service/txmgr/txmgr.go" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+11</span></div>
+                        <div class="text-start"><span class="text-danger">-7</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-70d8753a3cf0e73c3024ee61"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;op-service&#47;txmgr&#47;txmgr.go OpenFusionist&#47;optimism&#47;op-service&#47;txmgr&#47;txmgr.go</span>
+<span class="term-fg1">index 54dd5feddaaca938186a097bca0ab1e20ef71572..566c17e5360dd3ed7b9a60ba9bab3f97c3bcedf8 100644</span>
+<span class="term-fg1">--- ethereum-optimism&#47;optimism&#47;op-service&#47;txmgr&#47;txmgr.go</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;op-service&#47;txmgr&#47;txmgr.go</span>
+<span class="term-fg36">@@ -10,6 +10,8 @@</span> 	&quot;sync&quot;
+ 	&quot;sync&#47;atomic&quot;
+ 	&quot;time&quot;
+&nbsp;
+<span class="term-fg32">+	&quot;github.com&#47;ethereum-optimism&#47;optimism&#47;op-service&#47;bas&quot;</span>
+<span class="term-fg32">+</span>
+ 	&quot;github.com&#47;ethereum&#47;go-ethereum&quot;
+ 	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;common&quot;
+ 	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;core&quot;
+<span class="term-fg36">@@ -224,14 +226,14 @@</span> 	if candidate.GasLimit != 0 {
+ 		rawTx.Gas = candidate.GasLimit
+ 	} else {
+ 		&#47;&#47; Calculate the intrinsic gas for the transaction
+<span class="term-fg31">-		gas, err := m.backend.EstimateGas(ctx, ethereum.CallMsg{</span>
+<span class="term-fg32">+		gas, err := m.backend.EstimateGas(ctx, bas.ToLegacyCallMsg(ethereum.CallMsg{</span>
+ 			From:      m.cfg.From,
+ 			To:        candidate.To,
+ 			GasFeeCap: gasFeeCap,
+ 			GasTipCap: gasTipCap,
+ 			Data:      rawTx.Data,
+ 			Value:     rawTx.Value,
+<span class="term-fg31">-		})</span>
+<span class="term-fg32">+		}))</span>
+ 		if err != nil {
+ 			return nil, fmt.Errorf(&quot;failed to estimate gas: %w&quot;, err)
+ 		}
+<span class="term-fg36">@@ -265,9 +267,10 @@</span> 		*m.nonce++
+ 	}
+&nbsp;
+ 	rawTx.Nonce = *m.nonce
+<span class="term-fg32">+	legacyTx := bas.ToLegacyTx(rawTx)</span>
+ 	ctx, cancel := context.WithTimeout(ctx, m.cfg.NetworkTimeout)
+ 	defer cancel()
+<span class="term-fg31">-	tx, err := m.cfg.Signer(ctx, m.cfg.From, types.NewTx(rawTx))</span>
+<span class="term-fg32">+	tx, err := m.cfg.Signer(ctx, m.cfg.From, types.NewTx(legacyTx))</span>
+ 	if err != nil {
+ 		&#47;&#47; decrement the nonce, so we can retry signing with the same nonce next time
+ 		&#47;&#47; signWithNextNonce is called
+<span class="term-fg36">@@ -553,9 +556,11 @@</span> 		m.l.Info(&quot;re-estimated gas differs&quot;, &quot;oldgas&quot;, tx.Gas(), &quot;newgas&quot;, gas)
+ 	}
+ 	rawTx.Gas = gas
+&nbsp;
+<span class="term-fg32">+	legacyTx := bas.ToLegacyTx(rawTx)</span>
+<span class="term-fg32">+</span>
+ 	ctx, cancel := context.WithTimeout(ctx, m.cfg.NetworkTimeout)
+ 	defer cancel()
+<span class="term-fg31">-	newTx, err := m.cfg.Signer(ctx, m.cfg.From, types.NewTx(rawTx))</span>
+<span class="term-fg32">+	newTx, err := m.cfg.Signer(ctx, m.cfg.From, types.NewTx(legacyTx))</span>
+ 	if err != nil {
+ 		m.l.Warn(&quot;failed to sign new transaction&quot;, &quot;err&quot;, err)
+ 		return tx, nil
+<span class="term-fg36">@@ -569,8 +574,7 @@</span> 	cCtx, cancel := context.WithTimeout(ctx, m.cfg.NetworkTimeout)
+ 	defer cancel()
+ 	tip, err := m.backend.SuggestGasTipCap(cCtx)
+ 	if err != nil {
+<span class="term-fg31">-		m.metr.RPCError()</span>
+<span class="term-fg31">-		return nil, nil, fmt.Errorf(&quot;failed to fetch the suggested gas tip cap: %w&quot;, err)</span>
+<span class="term-fg32">+		tip = big.NewInt(1000000000)</span>
+ 	} else if tip == nil {
+ 		return nil, nil, errors.New(&quot;the suggested tip was nil&quot;)
+ 	}
+<span class="term-fg36">@@ -581,7 +585,7 @@</span> 	if err != nil {
+ 		m.metr.RPCError()
+ 		return nil, nil, fmt.Errorf(&quot;failed to fetch the suggested basefee: %w&quot;, err)
+ 	} else if head.BaseFee == nil {
+<span class="term-fg31">-		return nil, nil, errors.New(&quot;txmgr does not support pre-london blocks that do not have a basefee&quot;)</span>
+<span class="term-fg32">+		return tip, big.NewInt(0), nil</span>
+ 	}
+ 	return tip, head.BaseFee, nil
+ }</div>
+    </div>
+
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</div>
+
+            
+                <div class="ps-1 py-2 my-1"><div class="row border-bottom border-1"data-bs-toggle="collapse" data-bs-target="#id-8b2e6edfbe75c2777437b2ba"role="button" aria-expanded="false" aria-controls="id-8b2e6edfbe75c2777437b2ba">
+        
+            <div class="col-12 col-sm-9 text-start"><h2>Resource Metering Contract</h2></div>
+        
+        <div class="col-12 col-sm-3 ms-auto mt-2">
+            <div class="row line-stat">
+                <div class="text-end"><span class="text-success">+1</span></div>
+                <div class="text-start"><span class="text-danger">-1</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row forkdef-content collapse  border-1 ps-3 my-3" id="id-8b2e6edfbe75c2777437b2ba">
+        <div><p>ResourceMetering.sol is compatible with BAS chain.</p>
+</div>
+        <div>
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-029d6f394d939d3f7ed7f1b6" role="button"
+                   aria-expanded="false" aria-controls="id-029d6f394d939d3f7ed7f1b6">
+                    <code>packages/contracts-bedrock/src/L1/ResourceMetering.sol</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/ethereum-optimism/optimism/blob/2372c982d008638427014ccb400e8a0ca02716fc/packages/contracts-bedrock/src/L1/ResourceMetering.sol" target="_blank">ethereum-optimism/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/packages/contracts-bedrock/src/L1/ResourceMetering.sol" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+1</span></div>
+                        <div class="text-start"><span class="text-danger">-1</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-029d6f394d939d3f7ed7f1b6"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;packages&#47;contracts-bedrock&#47;src&#47;L1&#47;ResourceMetering.sol OpenFusionist&#47;optimism&#47;packages&#47;contracts-bedrock&#47;src&#47;L1&#47;ResourceMetering.sol</span>
+<span class="term-fg1">index b4d061c0266fb2580b9adbc42cb8d96d8eaa0d90..5ccabad5da050900a89965a89927e7e065a6a941 100644</span>
+<span class="term-fg1">--- ethereum-optimism&#47;optimism&#47;packages&#47;contracts-bedrock&#47;src&#47;L1&#47;ResourceMetering.sol</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;packages&#47;contracts-bedrock&#47;src&#47;L1&#47;ResourceMetering.sol</span>
+<span class="term-fg36">@@ -134,7 +134,7 @@</span>         &#47;&#47; into gas by dividing by the L1 base fee. We assume a minimum base fee of 1 gwei to avoid
+         &#47;&#47; division by zero for L1s that don&#39;t support 1559 or to avoid excessive gas burns during
+         &#47;&#47; periods of extremely low L1 demand. One-day average gas fee hasn&#39;t dipped below 1 gwei
+         &#47;&#47; during any 1 day period in the last 5 years, so should be fine.
+<span class="term-fg31">-        uint256 gasCost = resourceCost &#47; Math.max(block.basefee, 1 gwei);</span>
+<span class="term-fg32">+        uint256 gasCost = resourceCost &#47; 1 gwei;</span>
+&nbsp;
+         &#47;&#47; Give the user a refund based on the amount of gas they used to do all of the work up to
+         &#47;&#47; this point. Since we&#39;re at the end of the modifier, this should be pretty accurate. Acts</div>
+    </div>
+
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</div>
+
+            
+                <div class="ps-1 py-2 my-1"><div class="row border-bottom border-1"data-bs-toggle="collapse" data-bs-target="#id-39b7e706dc85902f9ac2e8a9"role="button" aria-expanded="false" aria-controls="id-39b7e706dc85902f9ac2e8a9">
+        
+            <div class="col-12 col-sm-9 text-start"><h2>L1 Block Labeling</h2></div>
+        
+        <div class="col-12 col-sm-3 ms-auto mt-2">
+            <div class="row line-stat">
+                <div class="text-end"><span class="text-success">+40</span></div>
+                <div class="text-start"><span class="text-danger">-0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row forkdef-content collapse  border-1 ps-3 my-3" id="id-39b7e706dc85902f9ac2e8a9">
+        <div><p>Added support for L1 blocks without &lsquo;safe&rsquo; and &lsquo;finalized&rsquo; labels.</p>
+</div>
+        <div>
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-b3872b28fe12645f33bb07a8" role="button"
+                   aria-expanded="false" aria-controls="id-b3872b28fe12645f33bb07a8">
+                    <code>op-service/sources/eth_client.go</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/ethereum-optimism/optimism/blob/2372c982d008638427014ccb400e8a0ca02716fc/op-service/sources/eth_client.go" target="_blank">ethereum-optimism/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/op-service/sources/eth_client.go" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+40</span></div>
+                        <div class="text-start"><span class="text-danger">-0</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-b3872b28fe12645f33bb07a8"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;op-service&#47;sources&#47;eth_client.go OpenFusionist&#47;optimism&#47;op-service&#47;sources&#47;eth_client.go</span>
+<span class="term-fg1">index 553615857908c0eb1de2230676bf99341df65581..85d13c9a6c5a47b65a919d1d13bcc19d2da16f09 100644</span>
+<span class="term-fg1">--- ethereum-optimism&#47;optimism&#47;op-service&#47;sources&#47;eth_client.go</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;op-service&#47;sources&#47;eth_client.go</span>
+<span class="term-fg36">@@ -303,6 +303,26 @@</span> 	return s.headerCall(ctx, &quot;eth_getBlockByNumber&quot;, numberID(number))
+ }
+&nbsp;
+ func (s *EthClient) InfoByLabel(ctx context.Context, label eth.BlockLabel) (eth.BlockInfo, error) {
+<span class="term-fg32">+	if label == eth.Safe {</span>
+<span class="term-fg32">+		byLabel, err := s.InfoByLabel(ctx, eth.Unsafe)</span>
+<span class="term-fg32">+		if err != nil {</span>
+<span class="term-fg32">+			return nil, err</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+		if byLabel.NumberU64() &lt;= 10 {</span>
+<span class="term-fg32">+			return nil, ethereum.NotFound</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+		return s.InfoByNumber(ctx, byLabel.NumberU64()-10)</span>
+<span class="term-fg32">+	}</span>
+<span class="term-fg32">+	if label == eth.Finalized {</span>
+<span class="term-fg32">+		byLabel, err := s.InfoByLabel(ctx, eth.Unsafe)</span>
+<span class="term-fg32">+		if err != nil {</span>
+<span class="term-fg32">+			return nil, err</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+		if byLabel.NumberU64() &lt;= 15 {</span>
+<span class="term-fg32">+			return nil, ethereum.NotFound</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+		return s.InfoByNumber(ctx, byLabel.NumberU64()-15)</span>
+<span class="term-fg32">+	}</span>
+ 	&#47;&#47; can&#39;t hit the cache when querying the head due to reorgs &#47; changes.
+ 	return s.headerCall(ctx, &quot;eth_getBlockByNumber&quot;, label)
+ }
+<span class="term-fg36">@@ -338,6 +358,26 @@</span> 	return s.payloadCall(ctx, &quot;eth_getBlockByNumber&quot;, numberID(number))
+ }
+&nbsp;
+ func (s *EthClient) PayloadByLabel(ctx context.Context, label eth.BlockLabel) (*eth.ExecutionPayload, error) {
+<span class="term-fg32">+	if label == eth.Safe {</span>
+<span class="term-fg32">+		byLabel, err := s.PayloadByLabel(ctx, eth.Unsafe)</span>
+<span class="term-fg32">+		if err != nil {</span>
+<span class="term-fg32">+			return nil, err</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+		if byLabel.BlockNumber &lt;= 10 {</span>
+<span class="term-fg32">+			return nil, ethereum.NotFound</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+		return s.PayloadByNumber(ctx, uint64(byLabel.BlockNumber-10))</span>
+<span class="term-fg32">+	}</span>
+<span class="term-fg32">+	if label == eth.Finalized {</span>
+<span class="term-fg32">+		byLabel, err := s.PayloadByLabel(ctx, eth.Unsafe)</span>
+<span class="term-fg32">+		if err != nil {</span>
+<span class="term-fg32">+			return nil, err</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+		if byLabel.BlockNumber &lt;= 15 {</span>
+<span class="term-fg32">+			return nil, ethereum.NotFound</span>
+<span class="term-fg32">+		}</span>
+<span class="term-fg32">+		return s.PayloadByNumber(ctx, uint64(byLabel.BlockNumber-15))</span>
+<span class="term-fg32">+	}</span>
+ 	return s.payloadCall(ctx, &quot;eth_getBlockByNumber&quot;, label)
+ }
+</div>
+    </div>
+
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</div>
+
+            
+                <div class="ps-1 py-2 my-1"><div class="row border-bottom border-1"data-bs-toggle="collapse" data-bs-target="#id-442038cddc1a620f02f1b9b3"role="button" aria-expanded="false" aria-controls="id-442038cddc1a620f02f1b9b3">
+        
+            <div class="col-12 col-sm-9 text-start"><h2>Gas Pricing Fixes</h2></div>
+        
+        <div class="col-12 col-sm-3 ms-auto mt-2">
+            <div class="row line-stat">
+                <div class="text-end"><span class="text-success">+4</span></div>
+                <div class="text-start"><span class="text-danger">-0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row forkdef-content collapse  border-1 ps-3 my-3" id="id-442038cddc1a620f02f1b9b3">
+        <div><p>Establish default values for gas tip cap when it&rsquo;s nil.</p>
+</div>
+        <div>
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-3c806a3efcfe3982af57245f" role="button"
+                   aria-expanded="false" aria-controls="id-3c806a3efcfe3982af57245f">
+                    <code>op-service/txmgr/metrics/tx_metrics.go</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/ethereum-optimism/optimism/blob/2372c982d008638427014ccb400e8a0ca02716fc/op-service/txmgr/metrics/tx_metrics.go" target="_blank">ethereum-optimism/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/op-service/txmgr/metrics/tx_metrics.go" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+4</span></div>
+                        <div class="text-start"><span class="text-danger">-0</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-3c806a3efcfe3982af57245f"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;op-service&#47;txmgr&#47;metrics&#47;tx_metrics.go OpenFusionist&#47;optimism&#47;op-service&#47;txmgr&#47;metrics&#47;tx_metrics.go</span>
+<span class="term-fg1">index 919e769ff8261d5894e83da3f061412bfd28e612..a49f8061d01061311d6a2ebe4ee8dc5bbdb20a70 100644</span>
+<span class="term-fg1">--- ethereum-optimism&#47;optimism&#47;op-service&#47;txmgr&#47;metrics&#47;tx_metrics.go</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;op-service&#47;txmgr&#47;metrics&#47;tx_metrics.go</span>
+<span class="term-fg36">@@ -4,6 +4,7 @@</span> import (
+ 	&quot;github.com&#47;ethereum-optimism&#47;optimism&#47;op-service&#47;metrics&quot;
+ 	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;core&#47;types&quot;
+ 	&quot;github.com&#47;ethereum&#47;go-ethereum&#47;params&quot;
+<span class="term-fg32">+	&quot;math&#47;big&quot;</span>
+&nbsp;
+ 	&quot;github.com&#47;prometheus&#47;client_golang&#47;prometheus&quot;
+ )
+<span class="term-fg36">@@ -117,6 +118,9 @@</span> }
+&nbsp;
+ &#47;&#47; TxConfirmed records lots of information about the confirmed transaction
+ func (t *TxMetrics) TxConfirmed(receipt *types.Receipt) {
+<span class="term-fg32">+	if receipt.EffectiveGasPrice == nil {</span>
+<span class="term-fg32">+		receipt.EffectiveGasPrice = big.NewInt(1000000000)</span>
+<span class="term-fg32">+	}</span>
+ 	fee := float64(receipt.EffectiveGasPrice.Uint64() * receipt.GasUsed &#47; params.GWei)
+ 	t.confirmEvent.Record(receiptStatusString(receipt))
+ 	t.TxL1GasFee.Set(fee)</div>
+    </div>
+
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</div>
+
+            
+                <div class="ps-1 py-2 my-1"><div class="row border-bottom border-1"data-bs-toggle="collapse" data-bs-target="#id-820689673c055673bb990ace"role="button" aria-expanded="false" aria-controls="id-820689673c055673bb990ace">
+        
+            <div class="col-12 col-sm-9 text-start"><h2>Dependencies Update</h2></div>
+        
+        <div class="col-12 col-sm-3 ms-auto mt-2">
+            <div class="row line-stat">
+                <div class="text-end"><span class="text-success">+1</span></div>
+                <div class="text-start"><span class="text-danger">-1</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row forkdef-content collapse  border-1 ps-3 my-3" id="id-820689673c055673bb990ace">
+        <div><p>Updated and managed project dependencies.</p>
+</div>
+        <div>
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-d8d2a45fc3433ba89372f5a1" role="button"
+                   aria-expanded="false" aria-controls="id-d8d2a45fc3433ba89372f5a1">
+                    <code>go.mod</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/ethereum-optimism/optimism/blob/2372c982d008638427014ccb400e8a0ca02716fc/go.mod" target="_blank">ethereum-optimism/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/go.mod" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+1</span></div>
+                        <div class="text-start"><span class="text-danger">-1</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-d8d2a45fc3433ba89372f5a1"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;go.mod OpenFusionist&#47;optimism&#47;go.mod</span>
+<span class="term-fg1">index 3713a12490c6db13b0df2042b224bd1159105751..859bfc48e125d5c218077374b1040e9068d8fbfb 100644</span>
+<span class="term-fg1">--- ethereum-optimism&#47;optimism&#47;go.mod</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;go.mod</span>
+<span class="term-fg36">@@ -209,7 +209,7 @@</span> 	lukechampine.com&#47;blake3 v1.2.1 &#47;&#47; indirect
+ 	rsc.io&#47;tmplfunc v0.0.3 &#47;&#47; indirect
+ )
+&nbsp;
+<span class="term-fg31">-replace github.com&#47;ethereum&#47;go-ethereum v1.13.1 =&gt; github.com&#47;ethereum-optimism&#47;op-geth v1.101303.0-rc.2.0.20231024150425-5023660bf92d</span>
+<span class="term-fg32">+replace github.com&#47;ethereum&#47;go-ethereum v1.13.1 =&gt; github.com&#47;OpenFusionist&#47;op-geth v1.101303.0-rc.2.0.20231026075306-0665187cbd4e</span>
+&nbsp;
+ &#47;&#47;replace github.com&#47;ethereum-optimism&#47;superchain-registry&#47;superchain =&gt; ..&#47;superchain-registry&#47;superchain
+ &#47;&#47;replace github.com&#47;ethereum&#47;go-ethereum v1.13.1 =&gt; ..&#47;go-ethereum</div>
+    </div>
+
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</div>
+
+            
+        </div>
+    </div>
+</div>
+
+                
+                    <div class="text-muted">
+                        <div class="ps-1 py-2 my-1"><div class="row border-bottom border-1"data-bs-toggle="collapse" data-bs-target="#id-f8d6864e178a477a121f9bb1"role="button" aria-expanded="false" aria-controls="id-f8d6864e178a477a121f9bb1">
+        
+            <div class="col-12 col-sm-9 text-start"><h4>Ignored changes</h4></div>
+        
+        <div class="col-12 col-sm-3 ms-auto mt-2">
+            <div class="row line-stat">
+                <div class="text-end"><span class="text-success">+2</span></div>
+                <div class="text-start"><span class="text-danger">-2</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row forkdef-content collapse  border-1 ps-3 my-3" id="id-f8d6864e178a477a121f9bb1">
+        <div></div>
+        <div>
+            
+                <div class="border-bottom"><div class="row">
+            <div class="col-12 col-md-4 text-start pe-2">
+                <a class="text-decoration-none" data-bs-toggle="collapse" href="#id-1fab3a716bf8b2eb25386fa3" role="button"
+                   aria-expanded="false" aria-controls="id-1fab3a716bf8b2eb25386fa3">
+                    <code>go.sum</code>
+                </a>
+            </div>
+
+            <div class="col-12 col-sm-8 col-md-4 text-start px-2">
+                <div class="row">
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/ethereum-optimism/optimism/blob/2372c982d008638427014ccb400e8a0ca02716fc/go.sum" target="_blank">ethereum-optimism/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+
+                    <div class="col-6">
+                        
+                            <a href="https://github.com/OpenFusionist/optimism//blob/160f7951306af4c0f40237e6a6b00c2a02a0c44d/go.sum" target="_blank">OpenFusionist/optimism <i class="bi bi-github"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4 ms-auto ps-2">
+                
+                    <div class="row line-stat">
+                        <div class="text-end"><span class="text-success">+2</span></div>
+                        <div class="text-start"><span class="text-danger">-2</span></div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="collapse patch-content term-container" id="id-1fab3a716bf8b2eb25386fa3"><span class="term-fg1">diff --git ethereum-optimism&#47;optimism&#47;go.sum OpenFusionist&#47;optimism&#47;go.sum</span>
+<span class="term-fg1">index 1627f592ddca5af36628a0494606e0dc0fe48497..d59f3ebc62525ce3b4fc943c15a0dd3bdbd580c5 100644</span>
+<span class="term-fg1">--- ethereum-optimism&#47;optimism&#47;go.sum</span>
+<span class="term-fg1">+++ OpenFusionist&#47;optimism&#47;go.sum</span>
+<span class="term-fg36">@@ -17,6 +17,8 @@</span> github.com&#47;DataDog&#47;zstd v1.5.2&#47;go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
+ github.com&#47;Masterminds&#47;semver&#47;v3 v3.1.1&#47;go.mod h1:VPu&#47;7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY&#47;8hQs=
+ github.com&#47;Microsoft&#47;go-winio v0.6.1 h1:9&#47;kr64B9VUZrLm5YYwbGtUJnMgqWVOdUAXu6Migciow=
+ github.com&#47;Microsoft&#47;go-winio v0.6.1&#47;go.mod h1:LRdKpFKfdobln8UmuiYcKPot9D2v6svN5+sAH+4kjUM=
+<span class="term-fg32">+github.com&#47;OpenFusionist&#47;op-geth v1.101303.0-rc.2.0.20231026075306-0665187cbd4e h1:ZkMnXJAtVl2izOPnn+KNkqBJoYJUmBtB1zdYLRPn&#47;uA=</span>
+<span class="term-fg32">+github.com&#47;OpenFusionist&#47;op-geth v1.101303.0-rc.2.0.20231026075306-0665187cbd4e&#47;go.mod h1:hl28ffXoV4maInP7dvhvNgDO79Q5M3MEYrPZZO6u3W8=</span>
+ github.com&#47;VictoriaMetrics&#47;fastcache v1.12.1 h1:i0mICQuojGDL3KblA7wUNlY5lOK6a4bwt3uRKnkZU40=
+ github.com&#47;VictoriaMetrics&#47;fastcache v1.12.1&#47;go.mod h1:tX04vaqcNoQeGLD+ra5pU5sWkuxnzWhEzLwhP9w653o=
+ github.com&#47;aead&#47;siphash v1.0.1&#47;go.mod h1:Nywa3cDsYNNK3gaciGTWPwHt0wlpNV15vwmswBAUSII=
+<span class="term-fg36">@@ -151,8 +153,6 @@</span> github.com&#47;elastic&#47;gosigar v0.14.2 h1:Dg80n8cr90OZ7x+bAax&#47;QjoW&#47;XqTI11RmA79ZwIm9&#47;4=
+ github.com&#47;elastic&#47;gosigar v0.14.2&#47;go.mod h1:iXRIGg2tLnu7LBdpqzyQfGDEidKCfWcCMS0WKyPWoMs=
+ github.com&#47;ethereum-optimism&#47;go-ethereum-hdwallet v0.1.3 h1:RWHKLhCrQThMfch+QJ1Z8veEq5ZO3DfIhZ7xgRP9WTc=
+ github.com&#47;ethereum-optimism&#47;go-ethereum-hdwallet v0.1.3&#47;go.mod h1:QziizLAiF0KqyLdNJYD7O5cpDlaFMNZzlxYNcWsJUxs=
+<span class="term-fg31">-github.com&#47;ethereum-optimism&#47;op-geth v1.101303.0-rc.2.0.20231024150425-5023660bf92d h1:5dptu9FNKPcZ3o5h2incAbQWH411Mw4HKlsZ4sF4llY=</span>
+<span class="term-fg31">-github.com&#47;ethereum-optimism&#47;op-geth v1.101303.0-rc.2.0.20231024150425-5023660bf92d&#47;go.mod h1:hl28ffXoV4maInP7dvhvNgDO79Q5M3MEYrPZZO6u3W8=</span>
+ github.com&#47;ethereum-optimism&#47;superchain-registry&#47;superchain v0.0.0-20231018202221-fdba3d104171 h1:MjCUj16JSLZRDnQQ6OOUy6Chfb4dKo7ahFceNi0RKZ8=
+ github.com&#47;ethereum-optimism&#47;superchain-registry&#47;superchain v0.0.0-20231018202221-fdba3d104171&#47;go.mod h1:&#47;70H&#47;KqrtKcvWvNGVj6S3rAcLC+kUPr3t2aDmYIS+Xk=
+ github.com&#47;ethereum&#47;c-kzg-4844 v0.3.1 h1:sR65+68+WdnMKxseNWxSJuAv2tsUrihTpVBTfM&#47;U5Zg=</div>
+    </div>
+
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</div>
+
+                    </div>
+                
+            </div>
+        </main>
+    </div>
+
+    <footer class="col-xl-10 col-xxl-8 mx-auto px-3 pt-5 my-5 text-muted border-top">
+        <p>Fork-diff overview of <a href="https://github.com/OpenFusionist/optimism/">optimism</a>, a fork of <a href="https://github.com/ethereum-optimism/optimism">optimism</a>.</p>
+
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        const storedTheme = localStorage.getItem('theme')
+
+        // Get the preferred theme from the user's OS
+        const getPreferredTheme = () => {
+            if (storedTheme) {
+                return storedTheme
+            }
+
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        // Set the bootstrap theme
+        const setTheme = function (theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+            if (theme === 'dark') {
+                document.getElementById('dark-mode-toggle').setAttribute('checked', true)
+                document.getElementById('dark-mode-icon').classList.replace('bi-brightness-high-fill', 'bi-brightness-low')
+            } else {
+                document.getElementById('dark-mode-toggle').setAttribute('checked', false)
+                document.getElementById('dark-mode-icon').classList.replace('bi-brightness-low', 'bi-brightness-high-fill')
+            }
+        }
+
+        // Returns true if the current theme is dark
+        const isDark = () => {
+            return document.documentElement.getAttribute('data-bs-theme') === 'dark'
+        }
+
+        // Toggles dark mode
+        const toggleDarkMode = () => {
+            const newTheme = isDark() ? 'light' : 'dark'
+            setTheme(newTheme)
+            localStorage.setItem('theme', newTheme)
+        }
+
+        // Set the preferred theme on page load
+        window.onload = () => {
+            // Set preferred theme
+            setTheme(getPreferredTheme());
+            // Initialize tooltips
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        }
+
+        // Toggle dark mode when the toggle button is clicked
+        addEventListener("click", (event) => {
+            if (event.target.id === 'dark-mode-toggle') {
+                toggleDarkMode();
+                // De-focus the toggle
+                document.activeElement.blur()
+            }
+        });
+    </script>
+</body>
+</html>

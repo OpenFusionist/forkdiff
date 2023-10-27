@@ -1,0 +1,25 @@
+title: "OpenFusionist's blockscout fork diff"
+logo: ""
+footer: |
+  Fork-diff overview of [blockscout](https://github.com/OpenFusionist/blockscout/), a fork of [blockscout](https://github.com/blockscout/blockscout).
+base:
+  name: blockscout/blockscout
+  url: https://github.com/blockscout/blockscout
+  ref: refs/heads/production-optimism-stg
+fork:
+  name: OpenFusionist/blockscout
+  url: https://github.com/OpenFusionist/blockscout/
+  ref: refs/heads/af9029-fsn
+def:
+  title: "OpenFusionist's blockscout fork diff"
+  description: |
+    These are some **really** important `code` modifications in the fork.
+    The original can be found at [`github.com/blockscout/blockscout`](https://github.com/blockscout/blockscout).
+    And the fork at [`OpenFusionist/blockscout/`](https://github.com/OpenFusionist/blockscout/).
+  globs:
+  sub:
+    - title: "Optimism Fetcher Adjustment"
+      description: "Support for nodes without the 'safe' tag."
+      globs:
+        - "apps/indexer/lib/indexer/fetcher/optimism.ex"
+ignore:

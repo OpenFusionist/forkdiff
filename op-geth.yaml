@@ -1,0 +1,29 @@
+title: "OpenFusionist's op-geth fork diff"
+logo: ""
+footer: |  
+  Fork-diff overview of [op-geth](https://github.com/OpenFusionist/op-geth/), a fork of [op-geth](https://github.com/ethereum-optimism/op-geth).
+base:
+  name: ethereum-optimism/op-geth
+  url: https://github.com/ethereum-optimism/op-geth
+  ref: refs/heads/v1.101303.0-rc.2
+fork:
+  name: OpenFusionist/op-geth
+  url: https://github.com/OpenFusionist/op-geth/
+  ref: refs/heads/v1.101303.0-rc.2-fsn
+def:
+    title: "OpenFusionist's op-geth fork diff"
+    description: | 
+      These are some **really** important `code` modifications in the fork.
+      The original can be found at [`github.com/ethereum-optimism/op-geth`](https://github.com/ethereum-optimism/op-geth).
+      And the fork at [`OpenFusionist/op-geth/`](https://github.com/OpenFusionist/op-geth/).
+    globs:
+    sub:
+      - title: "Eth Client Adjustment"
+        description: "Temporarily reverted term in ethclient."
+        globs:
+          - "ethclient/ethclient.go" 
+          - "ethclient/gethclient/gethclient.go"
+ignore:
+  - "*.sum"
+
+ 
